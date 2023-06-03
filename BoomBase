@@ -1,0 +1,124 @@
+package org.boom.admin.base;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.WebElement;
+import org.boom.enumclass.Broswers;
+import org.boom.enumclass.Locaters;
+import org.openqa.selenium.WebDriver.Timeouts;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class BoomBase implements SeleniumAPI
+{
+	RemoteWebDriver driver=null;
+	WebDriverWait wait=null;
+	public void Setup(String url)
+	{
+		System.setProperty("webdriver.chrome.driver", "./driver/chromedriver.exe");
+		driver=new ChromeDriver();
+		driver.get(url);
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		wait=new WebDriverWait(driver, 10);
+	}
+	public void driverwait()
+	{
+		System.out.println("Driver wait on: 10 seconds");
+		wait=new WebDriverWait(driver, 10);
+	}
+	public void dashwait(String wurl)
+	{
+		wait.until(ExpectedConditions.urlToBe(wurl));
+
+	}
+
+	public void setUp(Broswers broswername, String url) 
+	{
+		switch (broswername)
+		{
+		case CHROME : 
+			System.setProperty("webdriver.chrome.driver", "./driver/chromedriver.exe");
+			 driver=new ChromeDriver();
+			break;
+		
+		case FIREFOX : 
+			 driver=new FirefoxDriver();
+			break;
+		case EDGE : 
+			 driver=new EdgeDriver();
+			break;
+		default:
+			System.out.println("ther is driver not avaliable");
+			break;
+		}
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.get(url);
+		
+	}
+
+	public void close() {
+		driver.close();
+		
+	}
+
+	public void quite() {
+		driver.quit();
+		
+	}
+
+	public WebElement findElemet(Locaters Type, String Value) {
+		switch (Type) {
+		case id:
+			return driver.findElementById(Value);
+		case name:
+			return driver.findElementByName(Value);
+		case xpath:
+			return driver.findElementByXPath(Value);
+		default:
+			System.out.println("lovater tyoe is not found");
+			break;
+		}
+		return null;
+	}
+
+	public void click(WebElement element) {
+		/**
+		 * check the webelement is clickable or not using elementToBeClickable() method
+		 */
+		WebElement ele=wait.withMessage("elemnet null")
+				.until(ExpectedConditions.elementToBeClickable(element));
+		ele.click();
+		
+	}
+
+	public void type(WebElement ele, String testdata) 
+	{
+		/**
+		 * check the webelement is visible or not using visibilityof() method
+		 */
+		WebElement element=wait.withMessage("elemnet null")
+				.until(ExpectedConditions.visibilityOf(ele));
+	element.clear();
+	element.sendKeys(testdata);
+		
+	}
+
+	@Override
+	public String getTitle() {
+		
+		return driver.getTitle();
+	}
+
+	@Override
+	public String getUrl() {
+		return driver.getCurrentUrl();
+		
+	}
+
+}
