@@ -1,0 +1,51 @@
+package org.boom.admin.test;
+
+import org.boom.admin.base.BoomBase;
+import org.boom.enumclass.Locaters;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class Login extends BoomBase
+{
+	@BeforeMethod
+	void broswerlaunch()
+	{
+		Setup("http://52.66.129.203:4200/#/auth/login");
+	}
+	
+@Test(priority=1)
+void login()
+{
+	
+	type(findElemet(Locaters.id, "mat-input-0"), "8680097929");
+	type(findElemet(Locaters.id, "mat-input-1"),"Ashok@123");
+	click(findElemet(Locaters.id, "kt_login_signin_submit"));
+	driverwait();
+	System.out.println("this is logout method");
+/**
+ * there is a issue while call logout methd
+ */
+	new Login().logoutuser();
+	
+}
+/**
+ * issue with test case parell runing , here run 1 by 1
+ */
+//@Test(priority=2,dependsOnGroups="Login.login")
+void logoutuser()
+{
+	//dashwait("http://52.66.129.203:4200/#/dashboard");
+	driverwait();
+	System.out.println("this is logout method");
+	click(findElemet(Locaters.xpath,"//span[contains(text(),'Ashoktest')]"));
+	
+	
+}
+//@AfterMethod
+void closebro()
+{
+	close();
+	System.out.println("after method");
+}
+}
