@@ -1,0 +1,13 @@
+package org.boom.enumclass;
+
+public enum Broswers
+{
+CHROME,FIREFOX,EDGE
+}
+========
+package org.boom.enumclass;
+
+public enum Locaters 
+{
+id,name,link,xpath,css
+}
